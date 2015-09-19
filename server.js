@@ -51,8 +51,17 @@ user_stream.on('connect', function(request){
 });
 
 
+
 server.start(function(){
 
 	console.log('Server running at: ', server.info.uri);
 
 })
+var puertoRico = [ '67.20', '17.52', '65.08', '18.33' ]
+
+var stream = T.stream('statuses/filter', { locations: puertoRico })
+
+stream.on('tweet', function (tweet) {
+  console.log(tweet)
+})
+
