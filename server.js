@@ -1,11 +1,19 @@
 var Hapi = require('Hapi');
 var Twit = require('twit');
+var pg = require('pg');
+var connectionString = 'postgres://joframart:evgax58@localhost:5432/moodpr'
+
+var client = new pg.Client(connectionString);
+
+
+
 //Load environment variables
 require('dotenv').load();
 
 var server = new Hapi.Server();
 server.connection({port: 3000});
 
+var count = 0;
 //Setup environment variables
 var T = new Twit({
 
@@ -17,51 +25,70 @@ var T = new Twit({
 });
 
 var screen_name = 'joframart';
-var filter_stream = T.stream('statuses/filter', { track: '@'+screen_name });
-var user_stream = T.stream('user');
 
+// var filter_stream = T.stream('statuses/filter', { track: '@'+screen_name });
 
-// Listen for favorite events
-user_stream.on('favorite', function (eventMsg) {
-  if (eventMsg.target.screen_name = screen_name) {
-    console.log('@' + eventMsg.source.screen_name + ' has favorited a Tweet.');
-  }
-});
+// var stream = T.stream('statuses/filter', { track: '#HackPR', language: 'en' })
 
-// Listen for follow events
-user_stream.on('follow', function (eventMsg) {
-  if (eventMsg.target.screen_name = screen_name) {
-    console.log('@' + eventMsg.source.screen_name + ' is a now a follower.');
-  }
-});
+// stream.on('tweet', function (tweet) {
+//   console.log(tweet)
+// })
 
-// Listen for mention events
-filter_stream.on('tweet', function (tweet) {
-  console.log('@' + tweet.user.screen_name + ' Tweeted with a mention.');
-})
-
-filter_stream.on('connect', function(request){
-	console.log('Listening for mentions of @' +screen_name + '...' );
-
-});
-
-user_stream.on('connect', function(request){
-
-	console.log('Listening on suer stream for @' + screen_name + '...');
-});
-
-
-
-server.start(function(){
-
-	console.log('Server running at: ', server.info.uri);
-
-})
-var puertoRico = [ '67.20', '17.52', '65.08', '18.33' ]
+var puertoRico = ['-67.20', '17.52', '-65.08', '18.33'];
 
 var stream = T.stream('statuses/filter', { locations: puertoRico })
 
+stream.on('connect', function(response){
+
+	console.log("Connected to Puerto Rico Stream...");
+})
 stream.on('tweet', function (tweet) {
-  console.log(tweet)
+	count++;
+	console.log("\nTweet #"+ count + "\n");
+
+	console.log("\tCreate At: " + tweet.created_at);
+	console.log("\tUser: " + tweet.user.name);
+	console.log("\tScreename: " + tweet.user.screen_name);
+	console.log("\tDescription: " + tweet.user.description);
+	console.log("\tLocation: " + tweet.user.location);
+	console.log("\tText: " + tweet.text);
+	console.log("\tCoordinates: " + JSON.stringify(tweet.coordinates));
+	console.log("\tPlaces: " + JSON.stringify(tweet.place));
+
+	// client.connect(function(err){
+
+	// 		if(err){
+
+	// 			return console.error('could not connect to postgres', err);
+	// 		}
+	// 		var coordinates = tweet.coordinates;
+
+	// 		var point = '';
+
+	// 		if(typeof coordinates == 'null'){
+	// 			point = null;
+
+	// 		}
+	// 		else{
+
+	// 			point = 'point(' + tweet.coordinates.coordinates[0] + ',' + tweet.coordinates.coordinates[1] + ')';
+	// 		}
+	// 		var query_string = "INSERT INTO tweet VALUES(" 
+	// 			+ tweet.text + "," 
+	// 			+ tweet.lang + ","
+	// 			+ JSON.stringify(tweet.user) + "," 
+	// 			+ JSON.stringify(tweet.entities) + ","
+	// 			+ point + ","
+	// 			+ JSON.stringify(tweet.place) + ","
+	// 			+ 
+
+
+	// 			)
+	// 		client.query('INSERT INTO ')
+	
+
+
+	// })
+
 })
 
