@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/joframart/moodpr",
   "dependencies": {
+    "bower": "^1.5.2",
     "dotenv": "^1.2.0",
     "good": "^6.3.0",
     "hapi": "^10.0.0",
