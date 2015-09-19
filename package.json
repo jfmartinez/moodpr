@@ -1,0 +1,33 @@
+{
+  "name": "moodpr",
+  "version": "1.0.0",
+  "description": "Sentimental analysis of tweets in different areas in PR",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joframart/moodpr.git"
+  },
+  "keywords": [
+    "moodpr",
+    "sentimental",
+    "analysis",
+    "hapijs",
+    "nodejs",
+    "alchemyapi"
+  ],
+  "author": "Jose F. Martinez, Cesar Cruz, Sylmarie Ortiz, Gustavo Camero",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joframart/moodpr/issues"
+  },
+  "homepage": "https://github.com/joframart/moodpr",
+  "dependencies": {
+    "dotenv": "^1.2.0",
+    "good": "^6.3.0",
+    "hapi": "^10.0.0",
+    "twit": "^2.1.0"
+  }
+}
