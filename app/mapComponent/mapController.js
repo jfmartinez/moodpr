@@ -10,6 +10,54 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 
 .controller('mapController', function($scope, $http) {
 
+	$scope.click = function(position, _, region){
+		console.log(region);
+		console.log(position.latLng)
+		$http({
+				url : "http://f0a1c97b.ngrok.io/trending",
+				method : "GET",
+				params : { latitude :  position.latLng.L, longitude : position.latLng.H }
+			}).then(function(response){
+
+				$scope.tags = response.data;
+
+				switch(region){
+					case "Mayaguez":
+						$scope.mayaguezVisible = true;
+					break;
+					case "Vieques":
+						$scope.viequesVisible = true;
+					break;
+					case "Luquillo":
+						$scope.luquilloVisible = true;
+					break;
+					case "Metro":
+						$scope.metroVisible = true;
+					break;
+					case "Orocovis":
+						$scope.orocovisVisible = true;
+					break;
+					case "Caguas":
+						$scope.caguasVisible = true;
+					break;
+					case "Ponce":
+						$scope.ponceVisible = true;
+					break;
+					default:
+					break;	
+				}
+				$scope.$apply();
+
+
+
+			}, function(err){
+
+				console.log("There was an error");
+
+				console.log(err);
+			});
+	}
+
 	//Variables
 	$scope.ready = false;
 
@@ -27,12 +75,19 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 	time.setHours(adjustedTime);
 	time.setMinutes(0);
 	time.setSeconds(0);
+
+	var thorsMonth = time.getMonth() + 1
+
+	var timeURL = time.getFullYear()+"-"+thorsMonth+"-"+time.getUTCDate()+"%20"+time.getHours()+":00:00";
+
+	console.log(timeURL);
+	
 	$scope.sliderValue = 0;
 	$scope.sliderOptions = {				
-        from: 12,
+        from: 24,
         to: 0,
         floor: true,
-        step: 6,
+        step: 3,
         dimension: "Hrs",
         vertical: false,
         css: {
@@ -42,7 +97,64 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
           pointer: {"background-color": "red"}          
         },    
         callback: function(value, elt) {
-            console.log(value);
+
+
+            //Get the time
+            var uTime = new Date();
+			var uhour = time.getHours();
+			var uAdjustedTime = hour - (hour % 3)
+			uTime.setHours(uAdjustedTime - 3 - value);
+
+			console.log(uTime.getHours());
+			uTime.setMinutes(0);
+			uTime.setSeconds(0);
+
+			var uTimeURL = uTime.getFullYear()+"-"+thorsMonth+"-"+uTime.getUTCDate()+"%20"+uTime.getHours()+":00:00";
+
+			$http({
+				url : "http://f0a1c97b.ngrok.io/sentiment",
+				method : "GET",
+				params : { time :  uTimeURL }
+			}).then(function(response){
+
+				$scope.ready = false;
+
+
+				response.data.map( function(region) {
+					switch(region.value){
+						case "negative":
+							negativeData = negativeData.concat(region.location)
+							break;
+						case "positive":
+							positiveData = positiveData.concat(region.location)
+							break;
+						default:
+							break;
+					}
+				});
+
+				negativeData.map(function(location){
+					$scope.negativeData.push(new google.maps.LatLng(location[1], location[0]));
+
+				});
+
+				positiveData.map(function(location){
+					$scope.positiveData.push(new google.maps.LatLng(location[1], location[0]));
+				});
+
+
+				//Wait until data is ready to setup maps
+				$scope.ready = true;
+
+
+			}, function(err){
+
+				console.log("There was an error");
+
+				console.log(err);
+			});
+
+
         }				
     };
 
@@ -63,35 +175,20 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
       'rgba(255, 0, 0, 1)'
     ];
 
-    var yellowGradient = [
-      'rgba(0, 255, 255, 0)',
-      'rgba(0, 255, 255, 1)',
-      'rgba(0, 191, 255, 1)',
-      'rgba(0, 127, 255, 1)',
-      'rgba(0, 63, 255, 1)',
-      'rgba(0, 0, 255, 1)',
-      'rgba(0, 0, 223, 1)',
-      'rgba(0, 0, 191, 1)',
-      'rgba(0, 0, 159, 1)',
-      'rgba(0, 0, 127, 1)',
-      'rgba(63, 0, 91, 1)',
-      'rgba(127, 0, 63, 1)',
-      'rgba(191, 0, 31, 1)',
-      'rgba(255, 0, 0, 1)'
-    ]
+
 
     var negativeData = [];
 	var positiveData = [];
-	var neutralData = [];
 	$scope.negativeData = [];
 	$scope.positiveData = [];
-	$scope.neutralData = [];
 
 	$http({
 		url : "http://f0a1c97b.ngrok.io/sentiment",
 		method : "GET",
-		params : { time : "2015-9-19%2024:00:00" }
+		params : { time :  timeURL }
 	}).then(function(response){
+
+		$scope.ready = false;
 
 		response.data.map( function(region) {
 			switch(region.value){
@@ -100,9 +197,6 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 					break;
 				case "positive":
 					positiveData = positiveData.concat(region.location)
-					break;
-				case "neutral":
-					neutralData += neutralData.concat(region.location)
 					break;
 				default:
 					break;
@@ -117,11 +211,6 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 		positiveData.map(function(location){
 			$scope.positiveData.push(new google.maps.LatLng(location[1], location[0]));
 		});
-
-		neutralData.map(function(location){
-			$scope.neutralData.push(new google.maps.LatLng(location[1], location[0]));
-		});
-
 
 
 		//Wait until data is ready to setup maps
@@ -139,16 +228,9 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 	$scope.$on('mapInitialized', function(event, map){
 		console.log(map);
 		positiveHeatmap = map.heatmapLayers.positive;
-		negativeHeatmap = map.heatmapLayers.negative;
-		neutralHeatmap = map.heatmapLayers.neutral;
+
 		positiveHeatmap.set('gradient', positiveHeatmap.get('gradient') ? null : blueGradient);
-		negativeHeatmap.set('gradient', negativeHeatmap.get('gradient') ? null : redGradient);
-		neutralHeatmap.set('gradient', neutralHeatmap.get('gradient') ? null : yellowGradient);
 
 	});
-
-  
-    
-   
    
 });

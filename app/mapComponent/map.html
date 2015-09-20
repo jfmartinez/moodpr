@@ -15,162 +15,103 @@
     	<div class="pure-u-1"> 
         	<div class="ribbon l-box-lrg">
   				<map id="theMap" ng-if="ready" zoom="10" center="18.232597, -66.281422" map-type-id="ROADMAP" disable-default-u-i="true">
-    				<heatmap-layer ng-if="ready" id="neutral" data="neurtalData"></heatmap-layer>
     				<heatmap-layer ng-if="ready" id="negative" data="negativeData"></heatmap-layer>
     				<heatmap-layer ng-if="ready" id="positive" data="positiveData"></heatmap-layer>
 
     				<!-- Mayaguez -->
-    				<marker position="18.207454, -67.132630" on-click="click()" id="Mayaguez" title="Mayagüez"></marker>
-    				<info-window id="bar" position="18.207454, -67.132630" visible="{{mayaguezVisible}}">
+    				<marker position="18.207454, -67.132630" on-click="click([18.207454, -67.132630], 'Mayaguez')" id="Mayaguez" title="Mayagüez"></marker>
+    				<info-window id="bar" position="18.207454, -67.132630" max-width="200" visible="{{mayaguezVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        
+							        	<div ng-repeat="tag in tags">
+							        		<p>{{tag}}</p>
+							        	</div>
 							      </div>
 							    </div>
 					</info-window>
 
 					<!-- Ponce -->
-    				<marker position="18.006357, -66.619304" on-click="click()" id="Ponce" title="Ponce"></marker>
-    				<info-window id="bar" position="18.006357, -66.619304" visible="{{ponceVisible}}">
+    				<marker position="18.006357, -66.619304" on-click="click([18.006357, -66.619304], 'Ponce')" id="Ponce" title="Ponce"></marker>
+    				<info-window id="bar" position="18.006357, -66.619304" max-width="200" visible="{{ponceVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        <p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large 
-							        sandstone rock formation in the southern part of the 
-							        Northern Territory, central Australia. It lies 335&nbsp;km (208&nbsp;mi)
-							        south west of the nearest large town, Alice Springs; 450&nbsp;km 
-							        (280&nbsp;mi) by road. Kata Tjuta and Uluru are the two major
-							        features of the Uluru - Kata Tjuta National Park. Uluru is
-							        sacred to the Pitjantjatjara and Yankunytjatjara, the
-							        Aboriginal people of the area. It has many springs, waterholes,
-							        rock caves and ancient paintings. Uluru is listed as a World
-							        Heritage Site.</p>
-							        <p>Attribution: Uluru, <a href="//en.wikipedia.org/w/index.php?title=Uluru&amp;oldid=297882194">
-							        http://en.wikipedia.org/w/index.php?title=Uluru</a> 
-							        (last visited June 22, 2009).</p>
+							        <div ng-repeat="tag in tags">
+							        		<p>{{tag}}</p>
+							        </div>
 							      </div>
 							    </div>
 					</info-window>
 
     				<!-- Metro -->
-    				<marker position="18.380677, -66.102919" on-click="click()" id="Metro" stitle="Metro"></marker>
-    				<info-window id="bar" position="18.380677, -66.102919" visible="{{metroVisible}}">
+    				<marker position="18.380677, -66.102919" on-click="click([18.380677, -66.102919], 'Metro')" id="Metro" stitle="Metro"></marker>
+    				<info-window id="bar" position="18.380677, -66.102919" max-width="200" visible="{{metroVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        <p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large 
-							        sandstone rock formation in the southern part of the 
-							        Northern Territory, central Australia. It lies 335&nbsp;km (208&nbsp;mi)
-							        south west of the nearest large town, Alice Springs; 450&nbsp;km 
-							        (280&nbsp;mi) by road. Kata Tjuta and Uluru are the two major
-							        features of the Uluru - Kata Tjuta National Park. Uluru is
-							        sacred to the Pitjantjatjara and Yankunytjatjara, the
-							        Aboriginal people of the area. It has many springs, waterholes,
-							        rock caves and ancient paintings. Uluru is listed as a World
-							        Heritage Site.</p>
-							        <p>Attribution: Uluru, <a href="//en.wikipedia.org/w/index.php?title=Uluru&amp;oldid=297882194">
-							        http://en.wikipedia.org/w/index.php?title=Uluru</a> 
-							        (last visited June 22, 2009).</p>
+							        <div ng-repeat="tag in tags">
+							        		<p>{{tag}}</p>
+							        </div>
 							      </div>
 							    </div>
 					</info-window>
 
     				<!-- Caguas -->
-    				<marker position="18.223944, -66.029381" on-click="click()" id="Caguas" title="Caguas"></marker>
-    				<info-window id="bar" position="18.223944, -66.029381" visible="{{caguasVisible}}">
+    				<marker position="18.223944, -66.029381" on-click="click([18.223944, -66.029381], 'Caguas')" id="Caguas" title="Caguas"></marker>
+    				<info-window id="bar" position="18.223944, -66.029381" max-width="200" visible="{{caguasVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        <p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large 
-							        sandstone rock formation in the southern part of the 
-							        Northern Territory, central Australia. It lies 335&nbsp;km (208&nbsp;mi)
-							        south west of the nearest large town, Alice Springs; 450&nbsp;km 
-							        (280&nbsp;mi) by road. Kata Tjuta and Uluru are the two major
-							        features of the Uluru - Kata Tjuta National Park. Uluru is
-							        sacred to the Pitjantjatjara and Yankunytjatjara, the
-							        Aboriginal people of the area. It has many springs, waterholes,
-							        rock caves and ancient paintings. Uluru is listed as a World
-							        Heritage Site.</p>
-							        <p>Attribution: Uluru, <a href="//en.wikipedia.org/w/index.php?title=Uluru&amp;oldid=297882194">
-							        http://en.wikipedia.org/w/index.php?title=Uluru</a> 
-							        (last visited June 22, 2009).</p>
+							        <div ng-repeat="tag in tags">
+							        	<p>{{tag}}</p>
+							        </div>
 							      </div>
 							    </div>
 					</info-window>
 
     				<!-- Luquillo -->
-    				<marker position="18.332247, -65.684207" on-click="click()" id="Luquillo" title="Luquillo"></marker>
-    				<info-window id="bar" position="18.332247, -65.684207" visible="{{luquilloVisible}}">
+    				<marker position="18.332247, -65.684207" on-click="click(18.332247, -65.684207)" id="Luquillo" title="Luquillo"></marker>
+    				<info-window id="bar" position="18.332247, -65.684207" max-width="200" visible="{{luquilloVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        <p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large 
-							        sandstone rock formation in the southern part of the 
-							        Northern Territory, central Australia. It lies 335&nbsp;km (208&nbsp;mi)
-							        south west of the nearest large town, Alice Springs; 450&nbsp;km 
-							        (280&nbsp;mi) by road. Kata Tjuta and Uluru are the two major
-							        features of the Uluru - Kata Tjuta National Park. Uluru is
-							        sacred to the Pitjantjatjara and Yankunytjatjara, the
-							        Aboriginal people of the area. It has many springs, waterholes,
-							        rock caves and ancient paintings. Uluru is listed as a World
-							        Heritage Site.</p>
-							        <p>Attribution: Uluru, <a href="//en.wikipedia.org/w/index.php?title=Uluru&amp;oldid=297882194">
-							        http://en.wikipedia.org/w/index.php?title=Uluru</a> 
-							        (last visited June 22, 2009).</p>
+							        <div ng-repeat="tag in tags">
+							        	<p>{{tag}}</p>
+							        </div>
 							      </div>
 							    </div>
 					</info-window>
 
     				<!-- Vieques -->
-    				<marker position="18.121279, -65.453089" on-click="click()" id="Vieques" title="Vieques"></marker>
-    				<info-window id="bar" position="18.121279, -65.453089" visible="{{viequesVisible}}">
+    				<marker position="18.121279, -65.453089" on-click="click(18.121279, -65.453089)" id="Vieques" title="Vieques"></marker>
+    				<info-window id="bar" position="18.121279, -65.453089" max-width="200" visible="{{viequesVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        <p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large 
-							        sandstone rock formation in the southern part of the 
-							        Northern Territory, central Australia. It lies 335&nbsp;km (208&nbsp;mi)
-							        south west of the nearest large town, Alice Springs; 450&nbsp;km 
-							        (280&nbsp;mi) by road. Kata Tjuta and Uluru are the two major
-							        features of the Uluru - Kata Tjuta National Park. Uluru is
-							        sacred to the Pitjantjatjara and Yankunytjatjara, the
-							        Aboriginal people of the area. It has many springs, waterholes,
-							        rock caves and ancient paintings. Uluru is listed as a World
-							        Heritage Site.</p>
-							        <p>Attribution: Uluru, <a href="//en.wikipedia.org/w/index.php?title=Uluru&amp;oldid=297882194">
-							        http://en.wikipedia.org/w/index.php?title=Uluru</a> 
-							        (last visited June 22, 2009).</p>
+							        <div ng-repeat="tag in tags">
+							        	<p>{{tag}}</p>
+							        </div>
 							      </div>
 							    </div>
 					</info-window>
 
     				<!-- Orocovis -->
-    				<marker position="18.234033, -66.393755" on-click="click()" id="Orocovis" title="Orocovis"></marker>
-    				<info-window id="bar" position="18.234033, -66.393755" visible="{{orocovisVisible}}">
+    				<marker position="18.234033, -66.393755" on-click="click(18.234033, -66.393755)" id="Orocovis" title="Orocovis"></marker>
+    				<info-window id="bar" position="18.234033, -66.393755" max-width="200" visible="{{orocovisVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        <p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large 
-							        sandstone rock formation in the southern part of the 
-							        Northern Territory, central Australia. It lies 335&nbsp;km (208&nbsp;mi)
-							        south west of the nearest large town, Alice Springs; 450&nbsp;km 
-							        (280&nbsp;mi) by road. Kata Tjuta and Uluru are the two major
-							        features of the Uluru - Kata Tjuta National Park. Uluru is
-							        sacred to the Pitjantjatjara and Yankunytjatjara, the
-							        Aboriginal people of the area. It has many springs, waterholes,
-							        rock caves and ancient paintings. Uluru is listed as a World
-							        Heritage Site.</p>
-							        <p>Attribution: Uluru, <a href="//en.wikipedia.org/w/index.php?title=Uluru&amp;oldid=297882194">
-							        http://en.wikipedia.org/w/index.php?title=Uluru</a> 
-							        (last visited June 22, 2009).</p>
+							        <div ng-repeat="tag in tags">
+							        		<p>{{tag}}</p>
+							        </div>
 							      </div>
 							    </div>
 					</info-window>
