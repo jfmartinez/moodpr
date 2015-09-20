@@ -26,7 +26,13 @@ label {
 }
 
 #theMap {
-    height: 600px;
+    height: 555px;
+}
+
+#theSlider {
+    padding-top: 100px;
+    background: #2d3e50;
+
 }
 
 .pure-img-responsive {
