@@ -12,6 +12,7 @@
     "angular-route": "~1.4.0",
     "font-awesome": "fontawesome#~4.4.0",
     "html5-boilerplate": "~5.2.0",
+    "ngmap": "~1.13.4",
     "pure": "~0.6.0"
   }
 }

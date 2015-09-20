@@ -14,6 +14,7 @@ body {
     font-size: 13px;
 }
 
+
 h1,
 h2,
 h3,
@@ -22,6 +23,10 @@ h5,
 h6,
 label {
     color: #34495e;
+}
+
+#theMap {
+    height: 600px;
 }
 
 .pure-img-responsive {
