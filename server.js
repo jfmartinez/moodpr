@@ -1,7 +1,7 @@
 var Hapi = require('Hapi');
 var Twit = require('twit');
 var pg = require('pg');
-var connectionString = 'postgres://joframart:evgax58@localhost:5432/moodpr'
+var connectionString = 'postgres://joframart:evgax58@localhost:5432/joframart'
 
 var client = new pg.Client(connectionString);
 
@@ -14,7 +14,8 @@ var server = new Hapi.Server();
 server.connection({port: 3000});
 
 var count = 0;
-//Setup environment variables
+
+//Establish Twit package
 var T = new Twit({
 
 	consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -24,28 +25,24 @@ var T = new Twit({
 
 });
 
-var screen_name = 'joframart';
-
-// var filter_stream = T.stream('statuses/filter', { track: '@'+screen_name });
-
-// var stream = T.stream('statuses/filter', { track: '#HackPR', language: 'en' })
-
-// stream.on('tweet', function (tweet) {
-//   console.log(tweet)
-// })
-
+//Puerto Rico's Box
 var puertoRico = ['-67.20', '17.52', '-65.08', '18.33'];
 
+//Stream filter for status and location inside of Puerto Rico
 var stream = T.stream('statuses/filter', { locations: puertoRico })
 
+//Listen for when the stream is connected
 stream.on('connect', function(response){
 
 	console.log("Connected to Puerto Rico Stream...");
 })
-stream.on('tweet', function (tweet) {
-	count++;
-	console.log("\nTweet #"+ count + "\n");
 
+//When a tweet is found
+stream.on('tweet', function (tweet) {
+
+	count++;
+
+	console.log("\nTweet #"+ count + "\n");
 	console.log("\tCreate At: " + tweet.created_at);
 	console.log("\tUser: " + tweet.user.name);
 	console.log("\tScreename: " + tweet.user.screen_name);
@@ -55,40 +52,63 @@ stream.on('tweet', function (tweet) {
 	console.log("\tCoordinates: " + JSON.stringify(tweet.coordinates));
 	console.log("\tPlaces: " + JSON.stringify(tweet.place));
 
-	// client.connect(function(err){
+	/* Remove unwanted parts of JSON */
+	var user = {
 
-	// 		if(err){
+		created_at : tweet.user.created_at,
+		description: tweet.user.description,
+		name : tweet.user.name,
+		screen_name: tweet.user.screen_name,
+		geo_enabled: tweet.user.geo_enabled,
+		entitites: tweet.user.entitites
+	}
 
-	// 			return console.error('could not connect to postgres', err);
-	// 		}
-	// 		var coordinates = tweet.coordinates;
+	/* Database pool of connections */
+	pg.connect(connectionString, function(err, client, done){
 
-	// 		var point = '';
+			if(err){
 
-	// 		if(typeof coordinates == 'null'){
-	// 			point = null;
+				return console.error('could not connect to postgres', err);
+			}
+			console.log("Connecting to PostgresSQL");
 
-	// 		}
-	// 		else{
+			var coordinates = tweet.coordinates;
 
-	// 			point = 'point(' + tweet.coordinates.coordinates[0] + ',' + tweet.coordinates.coordinates[1] + ')';
-	// 		}
-	// 		var query_string = "INSERT INTO tweet VALUES(" 
-	// 			+ tweet.text + "," 
-	// 			+ tweet.lang + ","
-	// 			+ JSON.stringify(tweet.user) + "," 
-	// 			+ JSON.stringify(tweet.entities) + ","
-	// 			+ point + ","
-	// 			+ JSON.stringify(tweet.place) + ","
-	// 			+ 
+			var point = '';
 
+			if(!point){
+				point = null;
 
-	// 			)
-	// 		client.query('INSERT INTO ')
+			}
+			else{
+
+				point = 'point(' + tweet.coordinates.coordinates[0] + ',' + tweet.coordinates.coordinates[1] + ')';
+			}
 	
 
+        	client.query("INSERT INTO tweet(text,lang, userjson, entities, location, place, tweeted_at, timestamp_group, retrieved_at) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)", 
+        		[tweet.text, 
+        		tweet.lang, 
+        		JSON.stringify(user), 
+        		JSON.stringify(tweet.entities), 
+        		point,  
+        		JSON.stringify(tweet.place), 
+        		new Date(tweet.created_at), 
+        		0, 
+        		new Date()], 
+        		
+        		function(err, result){
 
-	// })
+					if(err){
+						return console.error('error running query', err);
+					}
+					console.log('Tweet Saved');
+
+					client.end();
+			});
+	
+
+	})
 
 })
 
