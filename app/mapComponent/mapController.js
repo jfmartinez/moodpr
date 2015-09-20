@@ -12,6 +12,15 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 
 	//Variables
 	$scope.ready = false;
+
+	$scope.mayaguezVisible = false;
+	$scope.viequesVisible = false;
+	$scope.caguasVisible = false;
+	$scope.metroVisible = false;
+	$scope.luquilloVisible = false;
+	$scope.orocovisVisible = false;
+	$scope.ponceVisible = false;
+
 	var time = new Date();
 	var hour = time.getHours();
 	var adjustedTime = hour - (hour % 3)
@@ -79,7 +88,7 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 	$scope.neutralData = [];
 
 	$http({
-		url : "http://8c25851c.ngrok.io/sentiment",
+		url : "http://f0a1c97b.ngrok.io/sentiment",
 		method : "GET",
 		params : { time : "2015-9-19%2024:00:00" }
 	}).then(function(response){
@@ -128,12 +137,13 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 
 	var positiveHeatmap, negativeHeatmap, neutralHeatmap;
 	$scope.$on('mapInitialized', function(event, map){
+		console.log(map);
 		positiveHeatmap = map.heatmapLayers.positive;
 		negativeHeatmap = map.heatmapLayers.negative;
 		neutralHeatmap = map.heatmapLayers.neutral;
-		positiveHeatmap.set('gradient', heatmap.get('gradient') ? null : blueGradient);
-		negativeHeatmap.set('gradient', heatmap.get('gradient') ? null : redGradient);
-		neutralHeatmap.set('gradient', heatmap.get('gradient') ? null : yellowGradient);
+		positiveHeatmap.set('gradient', positiveHeatmap.get('gradient') ? null : blueGradient);
+		negativeHeatmap.set('gradient', negativeHeatmap.get('gradient') ? null : redGradient);
+		neutralHeatmap.set('gradient', neutralHeatmap.get('gradient') ? null : yellowGradient);
 
 	});
 
