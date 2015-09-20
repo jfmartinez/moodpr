@@ -8,11 +8,14 @@
       <div class="pure-u-1"> 
         <div class="ribbon l-box-lrg">
         	<div ng-controller="mapController">
+        		<div class="pure-u-1-3">
+   					<input ng-model="sliderValue" type="text" id="mySlider1" slider options="sliderOptions" />
+				</div>
   				<map id="theMap" zoom="10" center="18.235150, -66.488842" map-type-id="ROADMAP" disable-default-u-i="true">
-    			<heatmap-layer id="foo" data="taxiData">
-  				</heatmap-layer></map>
-  				<heatmap-layer id="bar" data="data">
-  				</heatmap-layer></map>
+    				<heatmap-layer ng-if="ready" id="foo" data="neurtalData"></heatmap-layer>
+    				<heatmap-layer ng-if="ready" id="foo" data="negativeData"></heatmap-layer>
+    				<heatmap-layer ng-if="ready" id="foo" data="positiveData"></heatmap-layer>
+  				</map>
 			</div>
     	</div>      
     </div>

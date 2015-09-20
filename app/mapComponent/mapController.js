@@ -1,34 +1,109 @@
 'use strict';
 
-angular.module('myApp.mapViewController', ['ngRoute', 'ngMap'])
+angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSlider'])
 
 .config(function($routeProvider) {
   $routeProvider.when('/map', {
     templateUrl: 'mapComponent/map.html',
-    controller: 'mapController'
   });
 })
 
-.controller('mapController', function($scope) {
+.controller('mapController', function($scope, $http) {
 
-	//$http.get("/")
+	$scope.ready = false;
 
-	 $scope.taxiData = [
-  		new google.maps.LatLng(18.235150, -66.488842),
-  		new google.maps.LatLng(18.235150, -66.488842),
-  		new google.maps.LatLng(18.235150, -66.488842),
-  		new google.maps.LatLng(18.235150, -66.488842),
-  		new google.maps.LatLng(37.782, -122.439),
-  		new google.maps.LatLng(37.782, -122.437),
-  		new google.maps.LatLng(37.782, -122.435),
-  		new google.maps.LatLng(37.785, -122.447),
-  		new google.maps.LatLng(37.785, -122.445),
-  		new google.maps.LatLng(37.785, -122.443),
-  		new google.maps.LatLng(37.785, -122.441),
-  		new google.maps.LatLng(37.785, -122.439),
-  		new google.maps.LatLng(37.785, -122.437),
-  		new google.maps.LatLng(37.785, -122.435)
-	]
+	var time = new Date();
+
+	var hour = time.getHours();
+
+	var adjustedTime = hour - (hour % 3)
+
+	time.setHours(adjustedTime);
+
+	time.setMinutes(0);
+
+	time.setSeconds(0);
+
+	$scope.sliderValue = 20;
+
+	$scope.sliderOptions = {				
+        from: 1,
+        to: 100,
+        floor: true,
+        step: 1,
+        dimension: " km",
+        vertical: false,
+        css: {
+          background: {"background-color": "silver"},
+          before: {"background-color": "purple"},
+          default: {"background-color": "white"},
+          after: {"background-color": "green"},
+          pointer: {"background-color": "red"}          
+        },    
+        callback: function(value, elt) {
+            console.log(value);
+        }				
+    };
+
+    var negativeData = [];
+
+	var positiveData = [];
+
+	var neutralData = [];
+
+	var final = [];
+
+	$scope.negativeData = [];
+
+	$scope.positiveData = [];
+
+	$scope.neutralData = [];
+
+	$http({
+		url : "http://8c25851c.ngrok.io/sentiment",
+		method : "GET",
+		params : { time : "2015-9-19%2024:00:00" }
+	}).then(function(response){
+
+		response.data.map( function(region) {
+			switch(region.value){
+				case "negative":
+					negativeData = negativeData.concat(region.location)
+					break;
+				case "positive":
+					positiveData = positiveData.concat(region.location)
+					break;
+				case "neutral":
+					neutralData += neutralData.concat(region.location)
+					break;
+				default:
+					break;
+			}
+		});
+
+		negativeData.map(function(location){
+			$scope.negativeData.push(new google.maps.LatLng(location[1], location[0]));
+
+		});
+
+		positiveData.map(function(location){
+			$scope.positiveData.push(new google.maps.LatLng(location[1], location[0]));
+		});
+
+		neutralData.map(function(location){
+			$scope.neutralData.push(new google.maps.LatLng(location[1], location[0]));
+		});
+
+		//Wait until data is ready to setup map
+		$scope.ready = true;
+
+
+	}, function(err){
+
+		console.log("There was an error");
+
+		console.log(err);
+	});
 
 	var heatmap;
 	$scope.$on('mapInitialized', function(event, map){
@@ -36,11 +111,10 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap'])
 	});
 
 	$scope.toggleHeatmap= function(event) {
-    heatmap.setMap(heatmap.getMap() ? null : $scope.map);
-  };
+    	heatmap.setMap(heatmap.getMap() ? null : $scope.map);
+  	};
 
   
-
   $scope.changeGradient = function() {
     var gradient = [
       'rgba(0, 255, 255, 0)',
@@ -59,14 +133,6 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap'])
       'rgba(255, 0, 0, 1)'
     ]
     heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
-  }
-
-  $scope.changeRadius = function() {
-    heatmap.set('radius', heatmap.get('radius') ? null : 20);
-  }
-
-  $scope.changeOpacity = function() {
-    heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
   }
    
 });
