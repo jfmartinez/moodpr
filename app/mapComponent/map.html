@@ -19,13 +19,13 @@
     				<heatmap-layer ng-if="ready" id="positive" data="positiveData"></heatmap-layer>
 
     				<!-- Mayaguez -->
-    				<marker position="18.207454, -67.132630" on-click="click([18.207454, -67.132630], 'Mayaguez')" id="Mayaguez" title="Mayagüez"></marker>
-    				<info-window id="bar" position="18.207454, -67.132630" max-width="200" visible="{{mayaguezVisible}}">
+    				<marker position="18.207454, -67.132630" on-click="showInfoWindow(event, 'Mayaguez')" id="Mayaguez" title="Mayagüez"></marker>
+    				<info-window id="Mayaguez" position="18.207454, -67.132630" max-width="200" visible="{{mayaguezVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        	<div ng-repeat="tag in tags">
+							        	<div ng-repeat="tag in mayaTags">
 							        		<p>{{tag}}</p>
 							        	</div>
 							      </div>
@@ -47,13 +47,13 @@
 					</info-window>
 
     				<!-- Metro -->
-    				<marker position="18.380677, -66.102919" on-click="click([18.380677, -66.102919], 'Metro')" id="Metro" stitle="Metro"></marker>
-    				<info-window id="bar" position="18.380677, -66.102919" max-width="200" visible="{{metroVisible}}">
+    				<marker position="18.380677, -66.102919" on-click="showInfoWindow(event, 'Metro')" id="Metro" stitle="Metro"></marker>
+    				<info-window id="Metro" position="18.380677, -66.102919" max-width="200" visible="{{metroVisible}}">
     					<div ng-non-bindable="">
       						<div id="siteNotice"></div>
       							<h1 id="firstHeading" class="firstHeading">Trending</h1>
 							      <div id="bodyContent">
-							        <div ng-repeat="tag in tags">
+							        <div ng-repeat="tag in metroTags">
 							        		<p>{{tag}}</p>
 							        </div>
 							      </div>

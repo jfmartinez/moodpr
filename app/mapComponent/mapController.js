@@ -10,54 +10,40 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 
 .controller('mapController', function($scope, $http) {
 
-	$scope.click = function(position, _, region){
-		console.log(region);
-		console.log(position.latLng)
-		$http({
-				url : "http://f0a1c97b.ngrok.io/trending",
-				method : "GET",
-				params : { latitude :  position.latLng.L, longitude : position.latLng.H }
-			}).then(function(response){
+	$scope.mayaTags = [];	
+	$scope.viequesTags;	
+	$scope.luquilloTags;	
+	$scope.ponceTags;	
+	$scope.metroTags = [];	
+	$scope.orocovisTags;	
+	$scope.caguasTags;	
 
-				$scope.tags = response.data;
+	$http({
+		url : 'http://f0a1c97b.ngrok.io/trending',
+		method : 'GET',
+		params : { latitude : '18.207454', longitude : '-67.132630'}
+	}).then(function(response){
+		response.data.map(function(tweet){
+			console.log(tweet);
+			$scope.mayaTags.push(tweet.name);
+		});
+	});
 
-				switch(region){
-					case "Mayaguez":
-						$scope.mayaguezVisible = true;
-					break;
-					case "Vieques":
-						$scope.viequesVisible = true;
-					break;
-					case "Luquillo":
-						$scope.luquilloVisible = true;
-					break;
-					case "Metro":
-						$scope.metroVisible = true;
-					break;
-					case "Orocovis":
-						$scope.orocovisVisible = true;
-					break;
-					case "Caguas":
-						$scope.caguasVisible = true;
-					break;
-					case "Ponce":
-						$scope.ponceVisible = true;
-					break;
-					default:
-					break;	
-				}
-				$scope.$apply();
+	$http({
+		url : 'http://f0a1c97b.ngrok.io/trending',
+		method : 'GET',
+		params : { latitude : '18.380677', longitude : '-66.102919'}
+	}).then(function(response){
+		response.data.map(function(tweet){
+			console.log(tweet);
+			$scope.metroTags.push(tweet.name);
+		});
+	});
 
 
 
-			}, function(err){
-
-				console.log("There was an error");
-
-				console.log(err);
-			});
-	}
-
+	
+	 
 	//Variables
 	$scope.ready = false;
 
@@ -226,7 +212,6 @@ angular.module('myApp.mapViewController', ['ngRoute', 'ngMap', 'angularAwesomeSl
 
 	var positiveHeatmap, negativeHeatmap, neutralHeatmap;
 	$scope.$on('mapInitialized', function(event, map){
-		console.log(map);
 		positiveHeatmap = map.heatmapLayers.positive;
 
 		positiveHeatmap.set('gradient', positiveHeatmap.get('gradient') ? null : blueGradient);
